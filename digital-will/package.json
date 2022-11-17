@@ -9,9 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stacks/auth": "^3.5.1",
+    "@stacks/connect": "^6.10.1",
+    "@stacks/encryption": "^3.5.1",
+    "@stacks/network": "^2.0.2",
+    "@stacks/profile": "^3.5.1",
+    "@stacks/storage": "^4.3.5",
+    "@stacks/transactions": "^2.0.1",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
     "next": "13.0.3",
+    "nprogress": "^0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
