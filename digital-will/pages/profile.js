@@ -2,15 +2,25 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { myStxAddress } from '../libs/stacks/auth/auth';
+import ProfileCard from '../components/profile';
+import useSWR from 'swr';
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export default function Profile() {
 
-    const [address, setAddress] = useState("");
+    const [address, setAddress] = useState(null);
+    const [token, setTokens] = useState(0);
+    const { data, error } = useSWR(address? `https://stacks-node-api.testnet.stacks.co/extended/v1/address/${address}/stx`: null, fetcher, { refreshInterval: 5000 });
 
     useEffect(()=> {
         setAddress(myStxAddress());
-    }, [myStxAddress()]);
+        if (data){
+          setTokens(data.balance/1000000);
+        }
+    }, [myStxAddress(), data]);
 
+    
 
   return (
     <div className={styles.container}>
@@ -21,10 +31,10 @@ export default function Profile() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className="text-[3rem]">
+        {/* <h1 className="text-[3rem]">
           {address}
-        </h1>
-
+        </h1> */}
+      <ProfileCard address={address} tokens={token} />
         
       </main>
 

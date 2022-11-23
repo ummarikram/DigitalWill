@@ -10,7 +10,7 @@ export default function Home() {
         <link rel="icon" href="/logo.svg" />
       </Head>
 
-      <main className={styles.main}>
+      <main className={styles.prompt}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Digital Wills!</a>
         </h1>
