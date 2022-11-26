@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import WillCard from '../components/will'
 
 export default function Wills() {
   return (
@@ -12,6 +13,23 @@ export default function Wills() {
 
       <main className={styles.main}>
         
+      <button type="button" className="ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2">Create!</button>
+      <div class="flex flex-wrap justify-between">
+
+   <WillCard title="Will Title"
+   desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+   img="https://flowbite.com/docs/images/blog/image-4.jpg"/>
+
+<WillCard title="Will Title"
+   desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+   img="https://flowbite.com/docs/images/blog/image-4.jpg"/>
+
+   
+
+
+</div>
+
+
 
         
       </main>

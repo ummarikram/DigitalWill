@@ -4,12 +4,8 @@ import Layout from '../components/Layout'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-
-import { AppConfig, UserSession } from "@stacks/connect";
-
-const appConfig = new AppConfig(["store_write", "publish_data"]);
-
-export var userSession = new UserSession({ appConfig });
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }) {
 
@@ -39,6 +35,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Layout>
+      <ToastContainer />
       <Component {...pageProps} />
     </Layout>
   )

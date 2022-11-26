@@ -20,8 +20,6 @@ export default function Profile() {
         }
     }, [myStxAddress(), data]);
 
-    
-
   return (
     <div className={styles.container}>
       <Head>
@@ -31,9 +29,7 @@ export default function Profile() {
       </Head>
 
       <main className={styles.main}>
-        {/* <h1 className="text-[3rem]">
-          {address}
-        </h1> */}
+      
       <ProfileCard address={address} tokens={token} />
         
       </main>
