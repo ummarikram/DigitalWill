@@ -55,3 +55,23 @@ export async function fetchUserPic() {
   
 }
 
+export async function saveUserWill(userWill) {
+
+  try {
+
+      if (isSignedIn()) {
+
+          const storage = new Storage({ userSession });
+          return await storage.putFile(uuid, userWill, imageFileOptions);
+
+      }
+
+      return null;
+  }
+  catch(err){
+      console.log(error)
+      return null;
+  }
+}
+
+

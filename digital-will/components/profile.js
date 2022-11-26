@@ -95,7 +95,7 @@ export default function ProfileCard ({address, tokens, profilePic, updateProfile
                 <input id="imgupload" className="hidden" type="file" onChange={onFileChange}></input>
                 <label className="cursor-pointer" htmlFor="imgupload">
                     <img className="rounded-[40px] w-[70px] h-[70px] cursor-pointer ml-[20px] mr-[20px]"
-                    src={profilePic.selectedFile? profilePic.selectedFile : "https://raw.githubusercontent.com/JustMonk/codepen-resource-project/master/img/pixel%20avatar.png"} alt="user avatar" />
+                    src={profilePic.selectedFile? profilePic.selectedFile : '/loading.png'} alt="user avatar" />
                     </label>
                
 
