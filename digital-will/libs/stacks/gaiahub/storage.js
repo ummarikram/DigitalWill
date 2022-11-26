@@ -1,76 +1,76 @@
-import { userSession } from '../auth/auth';
+import { userSession, isSignedIn } from '../auth/auth';
 import { Storage } from '@stacks/storage';
-import { isSignedIn } from '../auth/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 const USER_PROFILE_PIC = 'USER_PROFILE_PIC.jpg'
 
 const imageFileOptions = {
-    encrypt: false,
-    contentType: "image/jpg",
-    dangerouslyIgnoreEtag: true,
-  };
+  encrypt: false,
+  contentType: "image/jpg",
+  dangerouslyIgnoreEtag: true,
+};
 
 export async function saveUserPic(userPic) {
 
-    try {
-  
-        if (isSignedIn()) {
+  try {
 
-            const storage = new Storage({ userSession });
-            return await storage.putFile(USER_PROFILE_PIC, userPic, imageFileOptions);
+    if (isSignedIn()) {
 
-        }
+      const storage = new Storage({ userSession });
+      return await storage.putFile(USER_PROFILE_PIC, userPic, imageFileOptions);
 
-        return null;
     }
-    catch(err){
-        console.log(error)
-        return null;
-    }
+
+    return null;
+  }
+  catch (err) {
+    console.log(error)
+    return null;
+  }
 }
 
 
 export async function fetchUserPic() {
 
-    try {
-  
-      if (isSignedIn()) {
+  try {
 
-          const storage = new Storage({ userSession });
+    if (isSignedIn()) {
 
-          const userPic = await storage.getFile(USER_PROFILE_PIC, { decrypt: false});
-          
-          if (userPic) {
-            return userPic;
-          }
+      const storage = new Storage({ userSession });
 
-        }
-  
-        return null;
+      const userPic = await storage.getFile(USER_PROFILE_PIC, { decrypt: false });
+
+      if (userPic) {
+        return userPic;
       }
-     catch (error) {
-      console.log(error)
-      return null;
+
     }
-  
+
+    return null;
+  }
+  catch (error) {
+    console.log(error)
+    return null;
+  }
+
 }
 
 export async function saveUserWill(userWill) {
 
   try {
 
-      if (isSignedIn()) {
+    if (isSignedIn()) {
 
-          const storage = new Storage({ userSession });
-          return await storage.putFile(uuid, userWill, imageFileOptions);
+      const storage = new Storage({ userSession });
+      return await storage.putFile(uuidv4(), userWill, imageFileOptions);
 
-      }
+    }
 
-      return null;
+    return null;
   }
-  catch(err){
-      console.log(error)
-      return null;
+  catch (err) {
+    console.log(error)
+    return null;
   }
 }
 

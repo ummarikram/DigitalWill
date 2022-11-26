@@ -11,12 +11,11 @@ export var userSession = new UserSession({ appConfig });
 // Set this to true if you want to use Mainnet
 const boolNetworkType = false;
 
-export function getPublicKey()
-{
-  try{
+export function getPublicKey() {
+  try {
     return publicKeyToString(pubKeyfromPrivKey(getUserData().appPrivateKey));
   }
-  catch(err){
+  catch (err) {
     console.log(err)
     return null;
   }
@@ -81,23 +80,22 @@ export function getUserData() {
 }
 
 export function isSignedIn() {
-    try {
-      if (userSession) {
-        if (userSession.isUserSignedIn()) {
-          return true;
-        } else {
-          return false;
-        }
+  try {
+    if (userSession) {
+      if (userSession.isUserSignedIn()) {
+        return true;
+      } else {
+        return false;
       }
-      else
-      {
-        return false
-      }
-    } catch (err) {
-      console.log(err);
-      return false;
     }
+    else {
+      return false
+    }
+  } catch (err) {
+    console.log(err);
+    return false;
   }
+}
 
 // bind this function on signout button OnClick
 export function Signout() {

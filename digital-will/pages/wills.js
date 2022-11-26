@@ -3,7 +3,7 @@ import styles from '../styles/Home.module.css'
 import WillCard from '../components/will'
 import Link from 'next/link'
 
-export default function Wills({address}) {
+export default function Wills({ address }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,30 +13,30 @@ export default function Wills({address}) {
       </Head>
 
       <main className={styles.main}>
-      
-      <Link 
-      className='ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2'
-      href="/create">Create!</Link>
-     
-      
-      <div class="flex flex-wrap justify-between">
 
-   <WillCard title="Will Title"
-   desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
-   img="https://flowbite.com/docs/images/blog/image-4.jpg"/>
-
-<WillCard title="Will Title"
-   desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
-   img="https://flowbite.com/docs/images/blog/image-4.jpg"/>
-
-   
+        <Link
+          className='ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2'
+          href="/create">Create!</Link>
 
 
-</div>
+        <div class="flex flex-wrap justify-between">
+
+          <WillCard title="Will Title"
+            desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+            img="https://flowbite.com/docs/images/blog/image-4.jpg" />
+
+          <WillCard title="Will Title"
+            desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+            img="https://flowbite.com/docs/images/blog/image-4.jpg" />
 
 
 
-        
+
+        </div>
+
+
+
+
       </main>
 
     </div>

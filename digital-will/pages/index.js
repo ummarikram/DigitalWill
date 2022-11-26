@@ -15,7 +15,7 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Digital Wills!</a>
         </h1>
 
-        
+
       </main>
 
     </div>

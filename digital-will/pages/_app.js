@@ -1,12 +1,12 @@
 import '../styles/globals.css'
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import Layout from '../components/Layout'
-import { myStxAddress } from '../libs/stacks/auth/auth';
+import "nprogress/nprogress.css";
+import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import Layout from '../components/Layout'
+import { myStxAddress } from '../libs/stacks/auth/auth';
 
 function MyApp({ Component, pageProps }) {
 
