@@ -17,6 +17,7 @@
     "@stacks/profile": "^3.5.1",
     "@stacks/storage": "^4.3.5",
     "@stacks/transactions": "^2.0.1",
+    "browser-image-compression": "^2.0.0",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
     "next": "13.0.3",

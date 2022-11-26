@@ -1,18 +1,47 @@
-import { useState } from "react";
 import { toast } from 'react-toastify';
+import {imageValidation, resizeImage} from "../services/image";
+import { saveUserPic } from '../libs/stacks/gaiahub/storage';
 
-export default function ProfileCard ({address, tokens}) {
+export default function ProfileCard ({address, tokens, profilePic, updateProfilePic}) {
    
-    const [profilePic, setProfilePic] = useState({
-        // Initially, no file is selected
-        selectedFile: null
-      });
+    const onFileChange = async (event) => {
 
-    const onFileChange = (event) => {
+      if (imageValidation(event.target.files[0])) {
 
-        // Update the state
-        setProfilePic({ selectedFile:  URL.createObjectURL(event.target.files[0]) });
-      };
+            try {
+              
+               const ResizedImage = await toast.promise(
+                resizeImage(event.target.files[0], 100),
+                  {
+                    pending: 'Compressing Your Image...',
+                    success: 'Compressed 👌',
+                    error: 'Error in Compressing 🤯'
+                  }
+                )
+
+            
+                const imageUploadResponse = await toast.promise(
+                    saveUserPic(ResizedImage),
+                      {
+                        pending: 'Uploading Your Image...',
+                        success: 'Uploaded 👌',
+                        error: 'Error in Uploading 🤯'
+                      }
+                )
+
+                toast.dismiss()
+                
+                if(imageUploadResponse){
+                        console.log(imageUploadResponse);
+                        updateProfilePic({ selectedFile: imageUploadResponse });
+                }
+                  
+          }
+          catch(err){
+              console.log(err);
+          }
+      }
+    };
 
       const requestTokens = (e) => {
       
@@ -37,6 +66,7 @@ export default function ProfileCard ({address, tokens}) {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
+                  toastId: "request",
                   theme: "light",
                   });
              })
@@ -48,6 +78,7 @@ export default function ProfileCard ({address, tokens}) {
                   closeOnClick: true,
                   pauseOnHover: true,
                   draggable: true,
+                  toastId: "request",
                   progress: undefined,
                   theme: "light",
                   });

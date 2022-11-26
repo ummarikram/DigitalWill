@@ -3,7 +3,7 @@ import styles from '../styles/Home.module.css'
 import WillCard from '../components/will'
 import Link from 'next/link'
 
-export default function Wills() {
+export default function Wills({address}) {
   return (
     <div className={styles.container}>
       <Head>

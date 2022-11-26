@@ -1,7 +1,8 @@
 import '../styles/globals.css'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Layout from '../components/Layout'
-import { useEffect } from 'react'
+import { myStxAddress } from '../libs/stacks/auth/auth';
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer} from 'react-toastify';
@@ -10,9 +11,13 @@ import 'react-toastify/dist/ReactToastify.css';
 function MyApp({ Component, pageProps }) {
 
   const router = useRouter()
+  const [address, setAddress] = useState(null);
 
   // page-transition effect
   useEffect(() => {
+
+    setAddress(myStxAddress());
+
     const handleStart = (url) => {
       console.log(`Loading: ${url}`)
       NProgress.start()
@@ -36,7 +41,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <ToastContainer />
-      <Component {...pageProps} />
+      <Component {...pageProps} address={address} />
     </Layout>
   )
 }

@@ -6,7 +6,7 @@ import { AppConfig, UserSession } from "@stacks/connect";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 
-var userSession = new UserSession({ appConfig });
+export var userSession = new UserSession({ appConfig });
 
 // Set this to true if you want to use Mainnet
 const boolNetworkType = false;

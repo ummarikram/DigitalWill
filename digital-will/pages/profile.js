@@ -1,24 +1,46 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
-import { myStxAddress } from '../libs/stacks/auth/auth';
 import ProfileCard from '../components/profile';
 import useSWR from 'swr';
+import { fetchUserPic } from '../libs/stacks/gaiahub/storage';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
-export default function Profile() {
+export default function Profile({address}) {
 
-    const [address, setAddress] = useState(null);
+    const [profilePic, setProfilePic] = useState({selectedFile: null});
     const [token, setTokens] = useState(0);
     const { data, error } = useSWR(address? `https://stacks-node-api.testnet.stacks.co/extended/v1/address/${address}/stx`: null, fetcher, { refreshInterval: 5000 });
 
     useEffect(()=> {
-        setAddress(myStxAddress());
-        if (data){
-          setTokens(data.balance/1000000);
-        }
-    }, [myStxAddress(), data]);
+
+      if (data){
+        setTokens(data.balance/1000000);
+      }
+
+    }, [data]);
+
+    useEffect(()=> {
+      
+      const GetUserProfilePic = async () => {
+
+          const response = await fetchUserPic();
+  
+          if (response) {
+
+            console.log(response);
+            
+            const objImg = Buffer.from(response).toString("base64")
+  
+            setProfilePic({ selectedFile: "data:image/png;base64," + objImg });
+
+          }
+      }
+      
+      GetUserProfilePic()
+      
+    }, [address]);
 
   return (
     <div className={styles.container}>
@@ -30,7 +52,7 @@ export default function Profile() {
 
       <main className={styles.main}>
       
-      <ProfileCard address={address} tokens={token} />
+      <ProfileCard address={address} tokens={token} profilePic={profilePic} updateProfilePic={setProfilePic} />
         
       </main>
 
