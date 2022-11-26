@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import WillCard from '../components/will'
+import Link from 'next/link'
 
 export default function Wills() {
   return (
@@ -12,8 +13,12 @@ export default function Wills() {
       </Head>
 
       <main className={styles.main}>
-        
-      <button type="button" className="ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2">Create!</button>
+      
+      <Link 
+      className='ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2'
+      href="/create">Create!</Link>
+     
+      
       <div class="flex flex-wrap justify-between">
 
    <WillCard title="Will Title"
