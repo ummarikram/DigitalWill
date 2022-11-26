@@ -58,28 +58,12 @@ export default function ProfileCard({ address, tokens, profilePic, updateProfile
       }).then((response) => response.json())
         .then((data) => {
           toast.success('Request Recieved!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
             toastId: "request",
-            theme: "light",
           });
         })
         .catch((error) => {
           toast.error('Error in Request!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
             toastId: "request",
-            progress: undefined,
-            theme: "light",
           });
         });
     }

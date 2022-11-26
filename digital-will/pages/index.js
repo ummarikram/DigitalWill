@@ -11,11 +11,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.prompt}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Digital Wills!</a>
-        </h1>
-
-
+        <h1 class="mb-4 text-4xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Secure Wills</span> on &#8383;itcoin.</h1>
       </main>
 
     </div>

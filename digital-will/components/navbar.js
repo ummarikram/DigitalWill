@@ -44,7 +44,7 @@ export default function Navbar({ Address }) {
 
                             {route.map((item, index) => (
                                 <li key={item}>
-                                    <Link className="text-gray-900 dark:text-white hover:underline" href={`${path[index]}`}>{item}</Link>
+                                    <Link className="text-gray-900 text-xl dark:text-white hover:underline" href={`${path[index]}`}>{item}</Link>
                                     <div />
                                 </li>
                             ))}
