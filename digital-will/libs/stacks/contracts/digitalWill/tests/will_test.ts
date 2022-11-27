@@ -19,7 +19,7 @@ Clarinet.test({
           
         ]);
 
-        assertEquals(block.receipts.length, 1);
+        assertEquals(block.receipts.length, 4);
         assertEquals(block.height, 2);
         
         block.receipts[0].result.expectOk()
