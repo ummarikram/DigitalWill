@@ -9,4 +9,4 @@ jobs:
       - name: "Execute unit tests"
         uses: docker://hirosystems/clarinet:latest
         with:
-          args: test --coverage --manifest-path=./Clarinet.toml
+          args: test --coverage --manifest-path=./digital-will/lib/stacks/contracts/digitalWill/Clarinet.toml
