@@ -5,13 +5,6 @@ authors = []
 telemetry = false
 cache_dir = '.\.cache'
 requirements = []
-[contracts.sip009-nft-trait]
-path = 'contracts/sip009-nft-trait.clar'
-clarity_version = 1
-
-[contracts.time-wallet]
-path = 'contracts/time-wallet.clar'
-clarity_version = 1
 
 [contracts.will]
 path = 'contracts/will.clar'

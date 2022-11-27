@@ -1,15 +1,17 @@
 ;; Digital Will NFT Smart Contract
 
-;; Interface/Trait Enforcement
-(impl-trait .sip009-nft-trait.sip009-nft-trait)
-
 ;; tokens
 (define-non-fungible-token digital-will uint)
 
 ;; data maps and vars
 
-(define-map will-data { id: uint } {claimed: bool, url: (optional (string-ascii 256))})
+(define-map will-data { id: uint } {claimed: bool, unlock-time: uint, amount: uint, donor: principal, url: (string-ascii 256)})
 (define-constant ERR_NOT_OWNER (err u999))
+(define-constant ERR_NOT_VALID_BENEFICIARY (err u998))
+(define-constant ERR_PAST_UNLOCK_TIME (err u997))
+(define-constant ERR_INVALID_UNLOCK_TIME (err u996))
+(define-constant ERR_NOT_VALID_AMOUNT (err u995))
+(define-constant ERR_ALREADY_CLAIMED (err u994))
 (define-data-var current-id uint u0)
 
 ;; read-only functions
@@ -23,11 +25,23 @@
 )
 
 (define-read-only (get-token-uri (id uint))
-    (ok (get url (unwrap-panic (map-get? will-data { id: id }))))
+    (unwrap-panic (get url (map-get? will-data { id: id })))
 )
 
 (define-read-only (is-claimed (id uint))
-    (ok (get claimed (map-get? will-data { id: id })))
+    (unwrap-panic (get claimed (map-get? will-data { id: id })))
+)
+
+(define-read-only (get-donor (id uint))
+    (unwrap-panic (get donor (map-get? will-data { id: id })))
+)
+
+(define-read-only (get-unlock-time (id uint))
+    (unwrap-panic (get unlock-time (map-get? will-data { id: id })))
+)
+
+(define-read-only (get-amount (id uint))
+    (unwrap-panic (get amount (map-get? will-data { id: id })))
 )
 
 ;; public functions
@@ -39,23 +53,39 @@
     )
 )
 
-(define-public (mint (beneficiary principal) (url (optional (string-ascii 256))))
+(define-public (mint (beneficiary principal) (unlock-years uint) (amount uint) (url (string-ascii 256)))
 
     (let
         (
             (token-id (+ (var-get current-id) u1))
+            (epoch-addition (* unlock-years u31556926)) ;; 1 year (365.24 days) = 31556926 seconds
+            (unlock-time (+ epoch-addition (unwrap-panic (get-block-info? time (- burn-block-height u1)))))
         )
-        
+
+        (asserts! (not (is-eq beneficiary tx-sender)) ERR_NOT_VALID_BENEFICIARY)
+        (asserts! (is-eq (ok true) (lock unlock-time amount)) ERR_NOT_VALID_BENEFICIARY)    
         (try! (nft-mint? digital-will token-id beneficiary))
-
-        (map-insert will-data { id: token-id } {claimed: false, url: url})
-
+        (map-insert will-data { id: token-id } {claimed: false, unlock-time: unlock-time, amount: amount, donor: tx-sender, url: url})
         (var-set current-id token-id)
-
-        (ok "Success")
+        (ok token-id)
     )
 )
 
-(define-public (burn (id uint))
-    (nft-burn? digital-will id tx-sender)
+(define-private (lock (unlock-time uint) (amount uint))
+    (begin
+        (asserts! (> unlock-time burn-block-height) ERR_PAST_UNLOCK_TIME)
+        (asserts! (> amount u0) ERR_NOT_VALID_AMOUNT)
+        (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
+        (ok true)
+    )
+)
+
+(define-public (claim (id uint))
+    (begin
+        (asserts! (is-eq (ok (some tx-sender)) (get-owner id)) ERR_NOT_OWNER)
+        (asserts! (is-eq false (is-claimed id)) ERR_ALREADY_CLAIMED)
+        (asserts! (>= (unwrap-panic (get-block-info? time (- burn-block-height u1))) (get-unlock-time id)) ERR_INVALID_UNLOCK_TIME)
+        (asserts! (is-eq (ok true) (as-contract (stx-transfer? (stx-get-balance tx-sender) tx-sender tx-sender))) ERR_NOT_VALID_AMOUNT)
+        (ok (map-set will-data { id: id } {claimed: true, unlock-time: (get-unlock-time id), amount: (get-amount id), donor: (get-donor id), url: (get-token-uri id)}))
+    )
 )
