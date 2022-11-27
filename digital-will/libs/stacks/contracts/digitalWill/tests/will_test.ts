@@ -11,23 +11,34 @@ Clarinet.test({
 
         const donor = accounts.get("deployer")!;
         const beneficiary = accounts.get("wallet_1")!;
+        const amount = 100;
+        const unlockYears = 1;
+        const advanceBlockHeight = 11;
+
+        chain.mineEmptyBlockUntil(advanceBlockHeight);
 
         let block = chain.mineBlock([
            
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
           
         ]);
 
         assertEquals(block.receipts.length, 1);
-        assertEquals(block.height, 2);
+        assertEquals(block.height, advanceBlockHeight + 1);
         
         block.receipts[0].result.expectOk()
-        .expectAscii("Success")
+        .expectUint(1)
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
         block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
         `${donor.address}.${ContractName}`, AssetName)
+
+        block.receipts[0].events.expectSTXTransferEvent(
+            amount,
+            donor.address,
+            `${donor.address}.${ContractName}`,
+          );
 
     },
 });
@@ -38,26 +49,37 @@ Clarinet.test({
 
         const donor = accounts.get("deployer")!;
         const beneficiary = accounts.get("wallet_1")!;
+        const amount = 100;
+        const unlockYears = 1;
+        const advanceBlockHeight = 11;
+
+        chain.mineEmptyBlockUntil(advanceBlockHeight);
 
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], donor.address)
           
         ]);
 
         assertEquals(block.receipts.length, 2);
-        assertEquals(block.height, 2);
+        assertEquals(block.height, advanceBlockHeight + 1);
         
         block.receipts[0].result.expectOk()
-        .expectAscii("Success")
+        .expectUint(1)
 
-        // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
-        `${donor.address}.${ContractName}`, AssetName)
+       // (Identifier, Owner/Reciever, Contract Address, Asset Name)
+       block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+       `${donor.address}.${ContractName}`, AssetName)
 
-        const owner = block.receipts[1].result.expectOk().expectSome()
+       block.receipts[0].events.expectSTXTransferEvent(
+           amount,
+           donor.address,
+           `${donor.address}.${ContractName}`,
+         );
+
+        const owner = block.receipts[1].result.expectSome()
 
         assertEquals(owner, beneficiary.address)
         
@@ -71,24 +93,35 @@ Clarinet.test({
         const donor = accounts.get("deployer")!;
         const beneficiary = accounts.get("wallet_1")!;
         const agent = accounts.get("wallet_2")!;
+        const amount = 100;
+        const unlockYears = 1;
+        const advanceBlockHeight = 11;
+
+        chain.mineEmptyBlockUntil(advanceBlockHeight);
 
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(beneficiary.address), types.principal(agent.address)], donor.address),
           
         ]);
 
         assertEquals(block.receipts.length, 2);
-        assertEquals(block.height, 2);
+        assertEquals(block.height, advanceBlockHeight + 1);
         
         block.receipts[0].result.expectOk()
-        .expectAscii("Success")
+        .expectUint(1)
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
-        `${donor.address}.${ContractName}`, AssetName)
+       block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+       `${donor.address}.${ContractName}`, AssetName)
+
+       block.receipts[0].events.expectSTXTransferEvent(
+           amount,
+           donor.address,
+           `${donor.address}.${ContractName}`,
+         );
         
         // Expect ERR_NOT_OWNER (u999) Error
         block.receipts[1].result.expectErr()
@@ -104,25 +137,37 @@ Clarinet.test({
         const donor = accounts.get("deployer")!;
         const agent = accounts.get("wallet_1")!;
         const beneficiary = accounts.get("wallet_2")!;
+        const amount = 100;
+        const unlockYears = 1;
+        const advanceBlockHeight = 11;
+
+        chain.mineEmptyBlockUntil(advanceBlockHeight);
+
 
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(agent.address), types.principal(beneficiary.address)], agent.address),
            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
           
         ]);
 
         assertEquals(block.receipts.length, 3);
-        assertEquals(block.height, 2);
+        assertEquals(block.height, advanceBlockHeight + 1);
         
         block.receipts[0].result.expectOk()
-        .expectAscii("Success")
+        .expectUint(1)
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), agent.address, 
-        `${donor.address}.${ContractName}`, AssetName)
+       block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), agent.address, 
+       `${donor.address}.${ContractName}`, AssetName)
+
+       block.receipts[0].events.expectSTXTransferEvent(
+           amount,
+           donor.address,
+           `${donor.address}.${ContractName}`,
+         );
 
         block.receipts[1].events.expectNonFungibleTokenTransferEvent(
             types.uint(1),
@@ -132,43 +177,9 @@ Clarinet.test({
             AssetName
         )
 
-        const owner = block.receipts[2].result.expectOk().expectSome()
+        const owner = block.receipts[2].result.expectSome()
 
         assertEquals(owner, beneficiary.address)
-        
-    },
-});
-
-Clarinet.test({
-    name: "Ensure that burn is working properly!",
-    async fn(chain: Chain, accounts: Map<string, Account>) {
-
-        const donor = accounts.get("deployer")!;
-        const beneficiary = accounts.get("wallet_1")!;
-
-        let block = chain.mineBlock([
-           
-           // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
-           Tx.contractCall(ContractName, "burn", [types.uint(1)], beneficiary.address),
-           Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
-          
-        ]);
-
-        assertEquals(block.receipts.length, 3);
-        assertEquals(block.height, 2);
-        
-        block.receipts[0].result.expectOk()
-        .expectAscii("Success")
-
-        block.receipts[1].events.expectNonFungibleTokenBurnEvent(
-            types.uint(1),
-            beneficiary.address, 
-            `${donor.address}.${ContractName}`,
-            AssetName
-        )
-
-        block.receipts[2].result.expectOk().expectNone()
         
     },
 });
