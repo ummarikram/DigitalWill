@@ -50,9 +50,6 @@ export function Signin() {
         name: "Digital Will",
         icon: "https://www.svgrepo.com/show/217623/contract.svg",
       },
-      onCancel: () => {
-        window.location.reload();
-      },
       onFinish: () => {
         window.location.reload();
       },

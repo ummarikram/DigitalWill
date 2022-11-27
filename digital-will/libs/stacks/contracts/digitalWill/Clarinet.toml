@@ -9,9 +9,12 @@ requirements = []
 path = 'contracts/sip009-nft-trait.clar'
 clarity_version = 1
 
+[contracts.time-wallet]
+path = 'contracts/time-wallet.clar'
+clarity_version = 1
+
 [contracts.will]
 path = 'contracts/will.clar'
-depends_on = ["sip009-nft-trait"]
 clarity_version = 1
 [repl.analysis]
 passes = ['check_checker']

@@ -15,13 +15,13 @@ export default function Navbar({ Address }) {
     return (
         <>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
-                <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl px-4 md:px-6 py-2.5">
-                    <a href="/" className="flex items-center">
+                <div className="flex flex-wrap justify-evenly items-center mx-auto max-w-screen-xl px-4 md:px-6 py-2.5">
+                    <a href="/" className="flex items-center m-2">
                         <img src="./logo.svg" className="h-6 mr-3 sm:h-9" alt="Digital Will Logo" />
                         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Digital Wills</span>
                     </a>
                     {!isConnected &&
-                        <div className="flex items-center">
+                        <div className="flex items-center m-2">
                             <button onClick={Signin} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Connect Wallet
                             </button>
@@ -29,7 +29,7 @@ export default function Navbar({ Address }) {
                     }
 
                     {isConnected &&
-                        <div className="flex items-center">
+                        <div className="flex items-center m-2">
                             <button onClick={Signout} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Disconnect Wallet
                             </button>

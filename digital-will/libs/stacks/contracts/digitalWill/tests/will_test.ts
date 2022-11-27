@@ -65,6 +65,39 @@ Clarinet.test({
 });
 
 Clarinet.test({
+    name: "Ensure that only owner can transfer!",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+
+        const donor = accounts.get("deployer")!;
+        const beneficiary = accounts.get("wallet_1")!;
+        const agent = accounts.get("wallet_2")!;
+
+        let block = chain.mineBlock([
+           
+           // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(beneficiary.address), types.principal(agent.address)], donor.address),
+          
+        ]);
+
+        assertEquals(block.receipts.length, 2);
+        assertEquals(block.height, 2);
+        
+        block.receipts[0].result.expectOk()
+        .expectAscii("Success")
+
+        // (Identifier, Owner/Reciever, Contract Address, Asset Name)
+        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+        `${donor.address}.${ContractName}`, AssetName)
+        
+        // Expect ERR_NOT_OWNER (u999) Error
+        block.receipts[1].result.expectErr()
+        .expectUint(999)
+        
+    },
+});
+
+Clarinet.test({
     name: "Ensure that transfer is working properly!",
     async fn(chain: Chain, accounts: Map<string, Account>) {
 

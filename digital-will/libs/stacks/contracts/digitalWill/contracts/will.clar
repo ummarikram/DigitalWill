@@ -26,6 +26,10 @@
     (ok (get url (unwrap-panic (map-get? will-data { id: id }))))
 )
 
+(define-read-only (is-claimed (id uint))
+    (ok (get claimed (map-get? will-data { id: id })))
+)
+
 ;; public functions
 
 (define-public (transfer (id uint) (sender principal) (reciever principal))
