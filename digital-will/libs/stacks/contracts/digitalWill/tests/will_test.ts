@@ -1,7 +1,7 @@
 
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.5/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
-import * as core from '@actions/core';
+import { setFailed } from 'https://github.com/actions/toolkit/blob/main/packages/core/src/core.ts';
 
 const ContractName = "will";
 const AssetName = "digital-will";
@@ -14,29 +14,27 @@ Clarinet.test({
         const beneficiary = accounts.get("wallet_1")!;
 
         let block = chain.mineBlock([
-
+           
             // (Contract Name, Function Name, Parameters[], Sender Address)
-            Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address)
-
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address)
+          
         ]);
+        
+        try{
+        assertEquals(block.receipts.length, 1);
+        assertEquals(block.height, 2);
+        
+        block.receipts[0].result.expectOk()
+        .expectAscii("Error")
 
-        try {
-            // Do stuff
-
-            assertEquals(block.receipts.length, 1);
-            assertEquals(block.height, 2);
-
-            block.receipts[0].result.expectOk()
-                .expectAscii("Error")
-
-            // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-            block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address,
-                `${donor.address}.${ContractName}`, AssetName)
+        // (Identifier, Owner/Reciever, Contract Address, Asset Name)
+        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+        `${donor.address}.${ContractName}`, AssetName)
         }
-        catch (err) {
-            // setFailed logs the message and sets a failing exit code
-            core.setFailed(`Action failed with error ${err}`);
+        catch(err){
+            setFailed(err);
         }
+
     },
 });
 
@@ -48,27 +46,27 @@ Clarinet.test({
         const beneficiary = accounts.get("wallet_1")!;
 
         let block = chain.mineBlock([
-
-            // (Contract Name, Function Name, Parameters[], Sender Address)
-            Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
-            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], donor.address)
-
+           
+           // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "get-owner", [types.uint(1)], donor.address)
+          
         ]);
 
         assertEquals(block.receipts.length, 2);
         assertEquals(block.height, 2);
-
+        
         block.receipts[0].result.expectOk()
-            .expectAscii("Success")
+        .expectAscii("Success")
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address,
-            `${donor.address}.${ContractName}`, AssetName)
+        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+        `${donor.address}.${ContractName}`, AssetName)
 
         const owner = block.receipts[1].result.expectOk().expectSome()
 
         assertEquals(owner, beneficiary.address)
-
+        
     },
 });
 
@@ -81,27 +79,27 @@ Clarinet.test({
         const agent = accounts.get("wallet_2")!;
 
         let block = chain.mineBlock([
-
-            // (Contract Name, Function Name, Parameters[], Sender Address)
-            Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
-            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(beneficiary.address), types.principal(agent.address)], donor.address),
-
+           
+           // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(beneficiary.address), types.principal(agent.address)], donor.address),
+          
         ]);
 
         assertEquals(block.receipts.length, 2);
         assertEquals(block.height, 2);
-
+        
         block.receipts[0].result.expectOk()
-            .expectAscii("Success")
+        .expectAscii("Success")
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address,
-            `${donor.address}.${ContractName}`, AssetName)
-
+        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
+        `${donor.address}.${ContractName}`, AssetName)
+        
         // Expect ERR_NOT_OWNER (u999) Error
         block.receipts[1].result.expectErr()
-            .expectUint(999)
-
+        .expectUint(999)
+        
     },
 });
 
@@ -114,27 +112,27 @@ Clarinet.test({
         const beneficiary = accounts.get("wallet_2")!;
 
         let block = chain.mineBlock([
-
-            // (Contract Name, Function Name, Parameters[], Sender Address)
-            Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
-            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(agent.address), types.principal(beneficiary.address)], agent.address),
-            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
-
+           
+           // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(agent.address), types.principal(beneficiary.address)], agent.address),
+           Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
+          
         ]);
 
         assertEquals(block.receipts.length, 3);
         assertEquals(block.height, 2);
-
+        
         block.receipts[0].result.expectOk()
-            .expectAscii("Success")
+        .expectAscii("Success")
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
-        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), agent.address,
-            `${donor.address}.${ContractName}`, AssetName)
+        block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), agent.address, 
+        `${donor.address}.${ContractName}`, AssetName)
 
         block.receipts[1].events.expectNonFungibleTokenTransferEvent(
             types.uint(1),
-            agent.address,
+            agent.address, 
             beneficiary.address,
             `${donor.address}.${ContractName}`,
             AssetName
@@ -143,7 +141,7 @@ Clarinet.test({
         const owner = block.receipts[2].result.expectOk().expectSome()
 
         assertEquals(owner, beneficiary.address)
-
+        
     },
 });
 
@@ -155,28 +153,28 @@ Clarinet.test({
         const beneficiary = accounts.get("wallet_1")!;
 
         let block = chain.mineBlock([
-
-            // (Contract Name, Function Name, Parameters[], Sender Address)
-            Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
-            Tx.contractCall(ContractName, "burn", [types.uint(1)], beneficiary.address),
-            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
-
+           
+           // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address),
+           Tx.contractCall(ContractName, "burn", [types.uint(1)], beneficiary.address),
+           Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
+          
         ]);
 
         assertEquals(block.receipts.length, 3);
         assertEquals(block.height, 2);
-
+        
         block.receipts[0].result.expectOk()
-            .expectAscii("Success")
+        .expectAscii("Success")
 
         block.receipts[1].events.expectNonFungibleTokenBurnEvent(
             types.uint(1),
-            beneficiary.address,
+            beneficiary.address, 
             `${donor.address}.${ContractName}`,
             AssetName
         )
 
         block.receipts[2].result.expectOk().expectNone()
-
+        
     },
 });
