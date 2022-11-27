@@ -23,7 +23,7 @@ Clarinet.test({
         assertEquals(block.height, 2);
         
         block.receipts[0].result.expectOk()
-        .expectAscii("Success")
+        .expectAscii("Error")
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
         block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
