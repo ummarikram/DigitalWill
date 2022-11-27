@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
     "@stacks/connect": "^6.10.1",
     "@stacks/encryption": "^3.5.1",
     "@stacks/network": "^2.0.2",

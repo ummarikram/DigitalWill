@@ -1,7 +1,6 @@
 
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.5/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
-import { setFailed } from 'https://github.com/actions/toolkit/blob/main/packages/core/src/core.ts';
 
 const ContractName = "will";
 const AssetName = "digital-will";
@@ -19,8 +18,7 @@ Clarinet.test({
            Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.some(types.ascii("propery-deed.jpeg"))], donor.address)
           
         ]);
-        
-        try{
+
         assertEquals(block.receipts.length, 1);
         assertEquals(block.height, 2);
         
@@ -30,10 +28,6 @@ Clarinet.test({
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
         block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
         `${donor.address}.${ContractName}`, AssetName)
-        }
-        catch(err){
-            setFailed(err);
-        }
 
     },
 });
