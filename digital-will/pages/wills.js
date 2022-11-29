@@ -1,9 +1,34 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import WillCard from '../components/will'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import useSWR from 'swr';
+import { contractDeployerAddress, contractName, assetName } from '../libs/stacks/contracts/integration'
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
+const asset_identifier = `${contractDeployerAddress}.${contractName}::${assetName}`
 
 export default function Wills({ address }) {
+
+  const [wills, setWills] = useState([]);
+  const { data, error } = useSWR(address ? `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${asset_identifier}` : null, fetcher, { refreshInterval: 5000 });
+  
+  useEffect(() => {
+
+    if (data) {
+      if (data.results.length > 0)
+      {
+        const my_wills = data.results.map((element) => {
+          let id = element.value.repr;
+          id = id.slice(1);
+          return id;
+        })
+      }
+    }
+
+  }, [data]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,36 +39,25 @@ export default function Wills({ address }) {
 
       {!address &&
         <main className={styles.prompt}>
-          <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Connect your <span class="text-blue-600 dark:text-blue-500">Hiro Wallet</span></h1>
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Connect your <span className="text-blue-600 dark:text-blue-500">Hiro Wallet</span></h1>
         </main>
       }
-      {address && 
-      <main className={styles.main}>
+      {address &&
+        <main className={styles.main}>
+          <Link
+            className='ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2'
+            href="/create">Create!</Link>
+          <div className="flex flex-wrap justify-between">
 
-        <Link
-          className='ml-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2'
-          href="/create">Create!</Link>
+            <WillCard title="Will Title"
+              desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+              img="https://flowbite.com/docs/images/blog/image-4.jpg" />
 
-
-        <div class="flex flex-wrap justify-between">
-
-          <WillCard title="Will Title"
-            desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
-            img="https://flowbite.com/docs/images/blog/image-4.jpg" />
-
-          <WillCard title="Will Title"
-            desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
-            img="https://flowbite.com/docs/images/blog/image-4.jpg" />
-
-
-
-
-        </div>
-
-
-
-
-      </main>
+            <WillCard title="Will Title"
+              desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+              img="https://flowbite.com/docs/images/blog/image-4.jpg" />
+          </div>
+        </main>
       }
 
     </div>

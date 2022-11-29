@@ -62,7 +62,7 @@ export async function saveUserWill(userWill) {
     if (isSignedIn()) {
 
       const storage = new Storage({ userSession });
-      return await storage.putFile(uuidv4(), userWill, imageFileOptions);
+      return await storage.putFile(uuidv4()+".jpg", userWill, imageFileOptions);
 
     }
 
@@ -74,4 +74,15 @@ export async function saveUserWill(userWill) {
   }
 }
 
+export async function deleteAllFiles(){
+
+  const storage = new Storage({ userSession });
+
+  await storage.listFiles(async (filename) => {
+       console.log("Deleted File: " + filename)
+        storage.deleteFile(filename, { wasSigned: true });
+    })
+
+
+}
 

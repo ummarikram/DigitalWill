@@ -41,6 +41,12 @@ export default function ProfileCard({ address, tokens, profilePic, updateProfile
         console.log(err);
       }
     }
+    else
+    {
+      toast.error('Invalid File Type OR Size Exceeds 2 MB!', {
+        toastId: "Image",
+    });
+    }
   };
 
   const requestTokens = (e) => {

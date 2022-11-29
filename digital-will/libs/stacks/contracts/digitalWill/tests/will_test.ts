@@ -20,7 +20,7 @@ Clarinet.test({
         let block = chain.mineBlock([
            
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address)
           
         ]);
 
@@ -58,7 +58,7 @@ Clarinet.test({
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], donor.address)
           
         ]);
@@ -102,7 +102,7 @@ Clarinet.test({
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockYears), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(beneficiary.address), types.principal(agent.address)], donor.address),
           
         ]);
@@ -147,7 +147,7 @@ Clarinet.test({
         let block = chain.mineBlock([
            
            // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.uint(unlockYears), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address),
+           Tx.contractCall(ContractName, "mint", [types.principal(agent.address), types.uint(unlockYears), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address),
            Tx.contractCall(ContractName, "transfer", [types.uint(1), types.principal(agent.address), types.principal(beneficiary.address)], agent.address),
            Tx.contractCall(ContractName, "get-owner", [types.uint(1)], beneficiary.address)
           

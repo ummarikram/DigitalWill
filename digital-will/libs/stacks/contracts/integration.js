@@ -1,45 +1,97 @@
+import { networkType, myStxAddress } from "../auth/auth";
 import {
-    callReadOnlyFunction,
-    cvToJSON,
+    standardPrincipalCV,
+    bufferCV,
+    uintCV,
+    FungibleConditionCode,
+    NonFungibleConditionCode,
+    createAssetInfo,
+    makeContractSTXPostCondition,
+    makeStandardSTXPostCondition,
+    makeStandardNonFungiblePostCondition
 } from "@stacks/transactions";
 
+import { appCallReadOnlyFunction } from "./interface";
+
 import { openContractCall } from "@stacks/connect";
-import { networkType, myStxAddress } from "../auth/auth";
 
-export async function appCallReadOnlyFunction(optionsProps) {
-    if (!optionsProps)
-        return new Promise((resolve, reject) => reject("No arguments provided"));
+export const contractDeployerAddress = "STYMF4ARBZEVT61CKV8RBQHC6NCGCAF7AQWH979K";
+export const contractName = "digital-wills-V4";
+export const assetName = 'digital-will';
 
-    const options = {
-        ...optionsProps,
-        network: networkType(),
-    };
-
-    return callReadOnlyFunction(options)
-        .then((response) => {
-            const responseJson = cvToJSON(response);
-
-            return new Promise((resolve, reject) => resolve(responseJson));
-        })
-        .catch((e) => {
-            return new Promise((resolve, reject) => reject(e));
+export async function getTokenId() {
+    try {
+        const value = await appCallReadOnlyFunction({
+            contractAddress: contractDeployerAddress,
+            contractName: contractName,
+            functionName: "get-last-token-id",
+            functionArgs: [
+            ],
         });
+       
+        return parseInt(value.value.value);
+    }
+    catch (error) {
+        console.log(error);
+        return;
+    }
+
 }
 
-export async function appCallPublicFunction(optionsProps) {
+export async function Mint(will) {
 
-    if (!optionsProps)
-        return new Promise((resolve, reject) => reject("no arguments provided"));
+    // Fungible Token Post Conditions
+    const STXpostConditionCode = FungibleConditionCode.GreaterEqual;
+    const STXpostConditionAmount = will.amount;
+
+    // Non-Fungible Token Post Conditions
+    const NFTpostConditionAddress = will.beneficiary;
+    const NFTpostConditionCode = NonFungibleConditionCode.Owns;
+    const prevTokenId = await getTokenId();
+    console.log(prevTokenId);
+    const tokenAssetName = uintCV(prevTokenId+1);
+    const nonFungibleAssetInfo = createAssetInfo(contractDeployerAddress, contractName, assetName);
+
+    // const standardNonFungiblePostCondition = 
+    const postConditions = [
+        makeStandardSTXPostCondition(
+            myStxAddress(),
+            STXpostConditionCode,
+            STXpostConditionAmount
+        ),
+        makeStandardNonFungiblePostCondition(
+            NFTpostConditionAddress,
+            NFTpostConditionCode,
+            nonFungibleAssetInfo,
+            tokenAssetName
+        ),
+    ]
+
+    const functionArgs = [
+        standardPrincipalCV(will.beneficiary),
+        uintCV(will.unlockTimestamp),
+        uintCV(will.amount),
+        bufferCV(will.url),
+    ];
 
     const options = {
-        ...optionsProps,
+        contractAddress: contractDeployerAddress,
+        contractName: contractName,
+        functionName: "mint",
+        functionArgs,
+        postConditions,
         network: networkType(),
         appDetails: {
-            name: "Digital Wills",
+            name: "Digital Will",
             icon: "https://www.svgrepo.com/show/217623/contract.svg",
         },
-        senderAddress: myStxAddress(),
+        onFinish: (data) => {
+            console.log("Stacks Transaction:", data.stacksTransaction);
+            console.log("Transaction ID:", data.txId);
+            console.log("Raw transaction:", data.txRaw);
+        },
     };
 
     openContractCall(options);
-};
+}
+

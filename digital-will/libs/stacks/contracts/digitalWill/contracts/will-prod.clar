@@ -20,6 +20,10 @@
     (ok (var-get current-id))
 )
 
+(define-read-only (get-will-data (id uint))
+    (map-get? will-data { id: id })
+)
+
 (define-read-only (get-owner (id uint))
     (nft-get-owner? digital-will id)
 )
@@ -40,13 +44,14 @@
     (unwrap-panic (get unlock-time (map-get? will-data { id: id })))
 )
 
-(define-read-only (get-current-timestamp)
-    (unwrap-panic (get-block-info? time (- burn-block-height u2)))
-)
-
 (define-read-only (get-amount (id uint))
     (unwrap-panic (get amount (map-get? will-data { id: id })))
 )
+
+(define-read-only (get-current-timestamp)
+    (unwrap-panic (get-block-info? time (- block-height u1)))
+)
+
 
 ;; public functions
 
@@ -57,14 +62,11 @@
     )
 )
 
-(define-public (mint (beneficiary principal) (unlock-at uint) (amount uint) (url (buff 256)))
+(define-public (mint (beneficiary principal) (unlock-time uint) (amount uint) (url (buff 256)))
 
     (let
         (
             (token-id (+ (var-get current-id) u1))
-            (epoch-addition (* unlock-at u3600)) ;; 1 hour = 3600 seconds
-            ;; (epoch-addition (* unlock-years u31556926)) ;; 1 year (365.24 days) = 31556926 seconds
-            (unlock-time (+ epoch-addition (unwrap-panic (get-block-info? time (- burn-block-height u1)))))
         )
 
         (asserts! (not (is-eq beneficiary tx-sender)) ERR_NOT_VALID_BENEFICIARY)
@@ -78,7 +80,7 @@
 
 (define-private (lock (unlock-time uint) (amount uint))
     (begin
-        (asserts! (> unlock-time (unwrap-panic (get-block-info? time (- burn-block-height u2)))) ERR_PAST_UNLOCK_TIME)
+        (asserts! (> unlock-time (unwrap-panic (get-block-info? time (- block-height u1)))) ERR_PAST_UNLOCK_TIME)
         (asserts! (> amount u0) ERR_NOT_VALID_AMOUNT)
         (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
         (ok true)
@@ -89,7 +91,7 @@
     (begin
         (asserts! (is-eq (some tx-sender) (get-owner id)) ERR_NOT_OWNER)
         (asserts! (is-eq false (is-claimed id)) ERR_ALREADY_CLAIMED)
-        (asserts! (>= (unwrap-panic (get-block-info? time (- burn-block-height u2))) (get-unlock-time id)) ERR_FUTURE_UNLOCK_TIME)
+        (asserts! (>= (unwrap-panic (get-block-info? time (- block-height u1))) (get-unlock-time id)) ERR_FUTURE_UNLOCK_TIME)
         (asserts! (is-eq (ok true) (as-contract (stx-transfer? (get-amount id) tx-sender (unwrap-panic (get-owner id))))) ERR_NOT_VALID_AMOUNT)  
         (ok (map-set will-data { id: id } {claimed: true, unlock-time: (get-unlock-time id), amount: (get-amount id), donor: (get-donor id), url: (get-token-uri id)}))
     )

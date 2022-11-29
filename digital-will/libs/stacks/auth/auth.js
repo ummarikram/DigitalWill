@@ -8,9 +8,6 @@ const appConfig = new AppConfig(["store_write", "publish_data"]);
 
 export var userSession = new UserSession({ appConfig });
 
-// Set this to true if you want to use Mainnet
-const boolNetworkType = false;
-
 export function getPublicKey() {
   try {
     return publicKeyToString(pubKeyfromPrivKey(getUserData().appPrivateKey));
@@ -22,16 +19,14 @@ export function getPublicKey() {
 }
 
 export function networkType() {
-  if (boolNetworkType) return new StacksMainnet();
-  else return new StacksTestnet();
+  return new StacksTestnet();
 }
 
 // this will return the users stx address if logged in
 export function myStxAddress() {
   try {
     if (getUserData()) {
-      if (boolNetworkType) return getUserData().profile.stxAddress.mainnet;
-      else return getUserData().profile.stxAddress.testnet;
+      return getUserData().profile.stxAddress.testnet;
     } else {
       return null;
     }

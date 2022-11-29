@@ -5,9 +5,12 @@ authors = []
 telemetry = false
 cache_dir = '.\.cache'
 requirements = []
-
 [contracts.will]
 path = 'contracts/will.clar'
+clarity_version = 1
+
+[contracts.will-prod]
+path = 'contracts/will-prod.clar'
 clarity_version = 1
 [repl.analysis]
 passes = ['check_checker']

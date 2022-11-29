@@ -52,7 +52,7 @@ export default function Profile({ address }) {
 
       {!address &&
         <main className={styles.prompt}>
-          <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Connect your <span class="text-blue-600 dark:text-blue-500">Hiro Wallet</span></h1>
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Connect your <span className="text-blue-600 dark:text-blue-500">Hiro Wallet</span></h1>
         </main>
       }
 

@@ -19,7 +19,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address)
         ]);
 
         assertEquals(block.receipts.length, 1);
@@ -71,7 +71,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address)
         ]);
 
         assertEquals(block.receipts.length, 1);
@@ -128,7 +128,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address)
         ]);
 
         assertEquals(block.receipts.length, 1);
@@ -174,7 +174,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             // (Contract Name, Function Name, Parameters[], Sender Address)
-           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.ascii("propery-deed.jpeg")], donor.address)
+           Tx.contractCall(ContractName, "mint", [types.principal(beneficiary.address), types.uint(unlockHours), types.uint(amount) , types.buff("propery-deed.jpeg")], donor.address)
         ]);
 
         assertEquals(block.receipts.length, 1);
@@ -202,6 +202,32 @@ Clarinet.test({
 
         futureBlock.receipts[0].result.expectErr()
         .expectUint(996)
+
+    },
+});
+
+Clarinet.test({
+    name: "Testing Timestamp!",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+
+        const donor = accounts.get("deployer")!;
+        const advanceBlockHeight = 2;
+
+        chain.mineEmptyBlockUntil(advanceBlockHeight);
+
+        let block = chain.mineBlock([
+            // (Contract Name, Function Name, Parameters[], Sender Address)
+           Tx.contractCall(ContractName, "get-current-timestamp", [], donor.address)
+        ]);
+
+        chain.mineEmptyBlockUntil(2409026);
+
+        let futureBlock = chain.mineBlock([
+            // (Contract Name, Function Name, Parameters[], Sender Address)
+            Tx.contractCall(ContractName, "get-current-timestamp", [], donor.address)
+        ]);
+
+        futureBlock.receipts[0].result.expectUint(2)
 
     },
 });
