@@ -16,7 +16,7 @@ import { appCallReadOnlyFunction } from "./interface";
 import { openContractCall } from "@stacks/connect";
 
 export const contractDeployerAddress = "STYMF4ARBZEVT61CKV8RBQHC6NCGCAF7AQWH979K";
-export const contractName = "digital-wills-V4";
+export const contractName = "digital-wills-V5";
 export const assetName = 'digital-will';
 
 export async function getTokenId() {
@@ -93,5 +93,24 @@ export async function Mint(will) {
     };
 
     openContractCall(options);
+}
+
+export async function getWillData(id){
+    try {
+        const value = await appCallReadOnlyFunction({
+          contractAddress: contractDeployerAddress,
+          contractName: contractName,
+          functionName: "get-will-data",
+          functionArgs: [
+            uintCV(id)
+          ],
+        });
+       
+        return value.value.value;
+      }
+      catch(error){
+        console.log(error);
+        return;
+      }
 }
 

@@ -74,15 +74,3 @@ export async function saveUserWill(userWill) {
   }
 }
 
-export async function deleteAllFiles(){
-
-  const storage = new Storage({ userSession });
-
-  await storage.listFiles(async (filename) => {
-       console.log("Deleted File: " + filename)
-        storage.deleteFile(filename, { wasSigned: true });
-    })
-
-
-}
-
