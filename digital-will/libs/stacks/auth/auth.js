@@ -39,7 +39,6 @@ export function myStxAddress() {
 // bind this function on signin button OnClick
 export function Signin() {
   try {
-    console.log(window.location.origin + "logo.svg");
     showConnect({
       appDetails: {
         name: "Digital Will",
