@@ -16,7 +16,9 @@ export default function Profile({ address }) {
   useEffect(() => {
 
     if (data) {
-      setTokens(data.balance / 1000000);
+      
+      setTokens(data.balance == 0? "0": data.balance / 1000000);
+
     }
 
   }, [data]);

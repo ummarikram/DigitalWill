@@ -52,7 +52,6 @@ export async function Mint(will) {
     const tokenAssetName = uintCV(prevTokenId+1);
     const nonFungibleAssetInfo = createAssetInfo(contractDeployerAddress, contractName, assetName);
 
-    // const standardNonFungiblePostCondition = 
     const postConditions = [
         makeStandardSTXPostCondition(
             myStxAddress(),
@@ -78,6 +77,46 @@ export async function Mint(will) {
         contractAddress: contractDeployerAddress,
         contractName: contractName,
         functionName: "mint",
+        functionArgs,
+        postConditions,
+        network: networkType(),
+        appDetails: {
+            name: "Digital Will",
+            icon: "https://www.svgrepo.com/show/217623/contract.svg",
+        },
+        onFinish: (data) => {
+            console.log("Stacks Transaction:", data.stacksTransaction);
+            console.log("Transaction ID:", data.txId);
+            console.log("Raw transaction:", data.txRaw);
+        },
+    };
+
+    openContractCall(options);
+}
+
+export async function Claim(id, amount) {
+
+    // Fungible Token Post Conditions
+    const STXpostConditionCode = FungibleConditionCode.GreaterEqual;
+    const STXpostConditionAmount = amount;
+
+    const postConditions = [
+        makeContractSTXPostCondition(
+            myStxAddress(),
+            contractName,
+            STXpostConditionCode,
+            STXpostConditionAmount
+        ),
+    ]
+
+    const functionArgs = [
+        uintCV(id)
+    ];
+
+    const options = {
+        contractAddress: contractDeployerAddress,
+        contractName: contractName,
+        functionName: "claim",
         functionArgs,
         postConditions,
         network: networkType(),

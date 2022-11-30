@@ -1,11 +1,9 @@
-import { toast } from 'react-toastify';
+import { Claim } from '../libs/stacks/contracts/integration';
 
-export default function WillCard({ donor, amount, unlock ,img, claimed }) {
+export default function WillCard({ id, donor, amount, unlock ,img, claimed }) {
 
-    const claimWill = async (e) => {
-        toast.success('Claimed!', {
-            toastId: "claimed",
-        });
+    const claimWill = () => {
+        Claim(id, amount);
     }
 
     return (

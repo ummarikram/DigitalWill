@@ -37,7 +37,7 @@ export default function Wills({ address }) {
 
             const url = await decryptData(Buffer.from(cipher, 'hex'))
 
-            will_data.push({ amount: data.amount.value, unlock: new Date(parseInt(data['unlock-time'].value) * 1000), claimed: data.claimed.value, url: url, donor: data.donor.value })
+            will_data.push({ id: my_wills[i], amount: data.amount.value, unlock: new Date(parseInt(data['unlock-time'].value) * 1000), claimed: data.claimed.value, url: url, donor: data.donor.value })
           }
 
           return will_data;
@@ -75,7 +75,7 @@ export default function Wills({ address }) {
             <div className="flex flex-wrap justify-between">
 
               {wills.map((item, index) => (
-                <WillCard key={index} donor={item.donor} amount={item.amount} unlock={item.unlock.toLocaleString()}
+                <WillCard key={index} id={item.id} donor={item.donor} amount={item.amount} unlock={item.unlock.toLocaleString()}
                   desc="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
                   img={item.url}
                   claimed={item.claimed} />
