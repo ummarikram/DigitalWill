@@ -12,6 +12,7 @@
 (define-constant ERR_FUTURE_UNLOCK_TIME (err u996))
 (define-constant ERR_NOT_VALID_AMOUNT (err u995))
 (define-constant ERR_ALREADY_CLAIMED (err u994))
+(define-constant ERR_LOCK (err u993))
 (define-data-var current-id uint u0)
 
 ;; read-only functions
@@ -70,7 +71,7 @@
         )
 
         (asserts! (not (is-eq beneficiary tx-sender)) ERR_NOT_VALID_BENEFICIARY)
-        (asserts! (is-eq (ok true) (lock unlock-time amount)) ERR_NOT_VALID_BENEFICIARY)    
+        (asserts! (is-eq (ok true) (lock unlock-time amount)) ERR_LOCK)    
         (try! (nft-mint? digital-will token-id beneficiary))
         (map-insert will-data { id: token-id } {claimed: false, unlock-time: unlock-time, amount: amount, donor: tx-sender, url: url})
         (var-set current-id token-id)

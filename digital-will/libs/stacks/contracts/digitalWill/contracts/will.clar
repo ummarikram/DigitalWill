@@ -12,6 +12,7 @@
 (define-constant ERR_FUTURE_UNLOCK_TIME (err u996))
 (define-constant ERR_NOT_VALID_AMOUNT (err u995))
 (define-constant ERR_ALREADY_CLAIMED (err u994))
+(define-constant ERR_LOCK (err u993))
 (define-data-var current-id uint u0)
 
 ;; read-only functions
@@ -41,7 +42,7 @@
 )
 
 (define-read-only (get-current-timestamp)
-    (unwrap-panic (get-block-info? time (- burn-block-height u2)))
+    (unwrap-panic (get-block-info? time (- block-height u1)))
 )
 
 (define-read-only (get-amount (id uint))
@@ -64,11 +65,11 @@
             (token-id (+ (var-get current-id) u1))
             (epoch-addition (* unlock-at u3600)) ;; 1 hour = 3600 seconds
             ;; (epoch-addition (* unlock-years u31556926)) ;; 1 year (365.24 days) = 31556926 seconds
-            (unlock-time (+ epoch-addition (unwrap-panic (get-block-info? time (- burn-block-height u1)))))
+            (unlock-time (+ epoch-addition (unwrap-panic (get-block-info? time (- block-height u1)))))
         )
 
         (asserts! (not (is-eq beneficiary tx-sender)) ERR_NOT_VALID_BENEFICIARY)
-        (asserts! (is-eq (ok true) (lock unlock-time amount)) ERR_NOT_VALID_BENEFICIARY)    
+        (asserts! (is-eq (ok true) (lock unlock-time amount)) ERR_LOCK)    
         (try! (nft-mint? digital-will token-id beneficiary))
         (map-insert will-data { id: token-id } {claimed: false, unlock-time: unlock-time, amount: amount, donor: tx-sender, url: url})
         (var-set current-id token-id)
@@ -78,7 +79,7 @@
 
 (define-private (lock (unlock-time uint) (amount uint))
     (begin
-        (asserts! (> unlock-time (unwrap-panic (get-block-info? time (- burn-block-height u2)))) ERR_PAST_UNLOCK_TIME)
+        (asserts! (> unlock-time (unwrap-panic (get-block-info? time (- block-height u1)))) ERR_PAST_UNLOCK_TIME)
         (asserts! (> amount u0) ERR_NOT_VALID_AMOUNT)
         (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
         (ok true)
@@ -89,7 +90,7 @@
     (begin
         (asserts! (is-eq (some tx-sender) (get-owner id)) ERR_NOT_OWNER)
         (asserts! (is-eq false (is-claimed id)) ERR_ALREADY_CLAIMED)
-        (asserts! (>= (unwrap-panic (get-block-info? time (- burn-block-height u2))) (get-unlock-time id)) ERR_FUTURE_UNLOCK_TIME)
+        (asserts! (>= (unwrap-panic (get-block-info? time (- block-height u1))) (get-unlock-time id)) ERR_FUTURE_UNLOCK_TIME)
         (asserts! (is-eq (ok true) (as-contract (stx-transfer? (get-amount id) tx-sender (unwrap-panic (get-owner id))))) ERR_NOT_VALID_AMOUNT)  
         (ok (map-set will-data { id: id } {claimed: true, unlock-time: (get-unlock-time id), amount: (get-amount id), donor: (get-donor id), url: (get-token-uri id)}))
     )
