@@ -1,4 +1,4 @@
-import { networkType, myStxAddress } from "../auth/auth";
+import { myStxAddress } from "../auth/auth";
 import {
     standardPrincipalCV,
     bufferCV,
@@ -11,12 +11,11 @@ import {
     makeStandardNonFungiblePostCondition
 } from "@stacks/transactions";
 
-import { appCallReadOnlyFunction } from "./interface";
+import { appCallPublicFunction, appCallReadOnlyFunction } from "./interface";
+import { DevelopmentMode } from "../auth/auth";
 
-import { openContractCall } from "@stacks/connect";
-
-export const contractDeployerAddress = "STYMF4ARBZEVT61CKV8RBQHC6NCGCAF7AQWH979K";
-export const contractName = "digital-wills-V5";
+export const contractDeployerAddress = DevelopmentMode? "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM":"STYMF4ARBZEVT61CKV8RBQHC6NCGCAF7AQWH979K";
+export const contractName = DevelopmentMode? "will-prod" : "digital-wills-V5";
 export const assetName = 'digital-will';
 
 export async function getTokenId() {
@@ -48,7 +47,6 @@ export async function Mint(will) {
     const NFTpostConditionAddress = will.beneficiary;
     const NFTpostConditionCode = NonFungibleConditionCode.Owns;
     const prevTokenId = await getTokenId();
-    console.log(prevTokenId);
     const tokenAssetName = uintCV(prevTokenId+1);
     const nonFungibleAssetInfo = createAssetInfo(contractDeployerAddress, contractName, assetName);
 
@@ -79,19 +77,9 @@ export async function Mint(will) {
         functionName: "mint",
         functionArgs,
         postConditions,
-        network: networkType(),
-        appDetails: {
-            name: "Digital Will",
-            icon: "https://www.svgrepo.com/show/217623/contract.svg",
-        },
-        onFinish: (data) => {
-            console.log("Stacks Transaction:", data.stacksTransaction);
-            console.log("Transaction ID:", data.txId);
-            console.log("Raw transaction:", data.txRaw);
-        },
     };
 
-    openContractCall(options);
+    appCallPublicFunction(options);
 }
 
 export async function Claim(id, amount) {
@@ -119,19 +107,9 @@ export async function Claim(id, amount) {
         functionName: "claim",
         functionArgs,
         postConditions,
-        network: networkType(),
-        appDetails: {
-            name: "Digital Will",
-            icon: "https://www.svgrepo.com/show/217623/contract.svg",
-        },
-        onFinish: (data) => {
-            console.log("Stacks Transaction:", data.stacksTransaction);
-            console.log("Transaction ID:", data.txId);
-            console.log("Raw transaction:", data.txRaw);
-        },
     };
 
-    openContractCall(options);
+    appCallPublicFunction(options);
 }
 
 export async function getWillData(id){

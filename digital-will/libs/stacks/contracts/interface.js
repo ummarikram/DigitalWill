@@ -40,6 +40,11 @@ export async function appCallPublicFunction(optionsProps) {
             icon: "https://www.svgrepo.com/show/217623/contract.svg",
         },
         senderAddress: myStxAddress(),
+        onFinish: (data) => {
+            console.log("Stacks Transaction:", data.stacksTransaction);
+            console.log("Transaction ID:", data.txId);
+            console.log("Raw transaction:", data.txRaw);
+        },
     };
 
     openContractCall(options);

@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import ProfileCard from '../components/profile';
 import useSWR from 'swr';
 import { fetchUserPic } from '../libs/stacks/gaiahub/storage';
+import { APIEndPoint } from '../libs/stacks/auth/auth';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
@@ -11,7 +12,7 @@ export default function Profile({ address }) {
 
   const [profilePic, setProfilePic] = useState({ selectedFile: null });
   const [token, setTokens] = useState(0);
-  const { data, error } = useSWR(address ? `https://stacks-node-api.testnet.stacks.co/extended/v1/address/${address}/stx` : null, fetcher, { refreshInterval: 5000 });
+  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/address/${address}/stx` : null, fetcher, { refreshInterval: 5000 });
 
   useEffect(() => {
 

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import useSWR from 'swr';
 import { contractDeployerAddress, contractName, assetName, getWillData } from '../libs/stacks/contracts/integration'
 import { decryptData } from '../libs/stacks/encryption/symmetric';
+import { APIEndPoint } from '../libs/stacks/auth/auth';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 const asset_identifier = `${contractDeployerAddress}.${contractName}::${assetName}`
@@ -13,7 +14,7 @@ const asset_identifier = `${contractDeployerAddress}.${contractName}::${assetNam
 export default function Wills({ address }) {
 
   const [wills, setWills] = useState([]);
-  const { data, error } = useSWR(address ? `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${asset_identifier}` : null, fetcher, { refreshInterval: 5000 });
+  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${asset_identifier}` : null, fetcher, { refreshInterval: 5000 });
 
   useEffect(() => {
 
