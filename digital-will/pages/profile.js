@@ -12,7 +12,7 @@ export default function Profile({ address }) {
 
   const [profilePic, setProfilePic] = useState({ selectedFile: null });
   const [token, setTokens] = useState(0);
-  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/address/${address}/stx` : null, fetcher, { refreshInterval: 5000 });
+  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/address/${address}/stx` : null, fetcher, { refreshInterval: 2000 });
 
   useEffect(() => {
 

@@ -7,7 +7,7 @@ import { AppConfig, UserSession } from "@stacks/connect";
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 
 export var userSession = new UserSession({ appConfig });
-export const DevelopmentMode = false;
+export const DevelopmentMode = true;
 export const APIEndPoint = DevelopmentMode? 'http://localhost:3999': 'https://stacks-node-api.testnet.stacks.co';
 
 export function getPublicKey() {
@@ -21,7 +21,7 @@ export function getPublicKey() {
 }
 
 export function networkType() {
-  return DevelopmentMode? new StacksTestnet({url: 'http://localhost:20443'}): new StacksTestnet();
+  return DevelopmentMode? new StacksTestnet({url: 'http://localhost:3999'}): new StacksTestnet();
 }
 
 // this will return the users stx address if logged in

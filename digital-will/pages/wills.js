@@ -6,7 +6,7 @@ import Link from 'next/link'
 import useSWR from 'swr';
 import { contractDeployerAddress, contractName, assetName, getWillData } from '../libs/stacks/contracts/integration'
 import { decryptData } from '../libs/stacks/encryption/symmetric';
-import { APIEndPoint } from '../libs/stacks/auth/auth';
+import { APIEndPoint, DevelopmentMode } from '../libs/stacks/auth/auth';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 const asset_identifier = `${contractDeployerAddress}.${contractName}::${assetName}`
@@ -14,17 +14,32 @@ const asset_identifier = `${contractDeployerAddress}.${contractName}::${assetNam
 export default function Wills({ address }) {
 
   const [wills, setWills] = useState([]);
-  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${asset_identifier}` : null, fetcher, { refreshInterval: 5000 });
+  const { data, error } = useSWR(address ?
+    DevelopmentMode ? `http://localhost:3999/extended/v1/address/${address}/assets` : `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${asset_identifier}` : null, fetcher, { refreshInterval: 2000 });
 
   useEffect(() => {
 
     if (data) {
       if (data.results.length > 0) {
-        const my_wills = data.results.map((element) => {
-          let id = element.value.repr;
-          id = id.slice(1);
-          return id;
+        const my_wills = data.results.flatMap((element) => {
+          if (DevelopmentMode) {
+            if (element.event_type === "non_fungible_token_asset") {
+              let id = element.asset.value.repr;
+              id = id.slice(1);
+              return id;
+            }
+            else{
+              return []
+            }
+          }
+          else {
+            let id = element.value.repr;
+            id = id.slice(1);
+            return id;
+          }
         })
+
+        console.log(my_wills);
 
         const fetchWillData = async () => {
 
