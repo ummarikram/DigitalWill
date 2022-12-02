@@ -21,4 +21,6 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - run: npm test
+      - with:
+          entrypoint: "bash"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && node test"
