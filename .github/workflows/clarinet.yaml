@@ -18,4 +18,10 @@ jobs:
           path: ./digital-will/libs/stacks/contracts/digitalWill/log.txt
       - name: Echo log.txt
         run: echo "${{ steps.log.outputs.content }}"
+      - name: Test Logs
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+        run: npm ci
+        run: npm test
   
