@@ -19,9 +19,6 @@ jobs:
       - name: Echo log.txt
         run: echo "${{ steps.log.outputs.content }}"
       - name: Test Logs
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-        run: npm ci
-        run: npm test
+        if: contains(${{ steps.log.outputs.content }}, 'FAILED')
+        run: echo fred
   
