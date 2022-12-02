@@ -2,7 +2,6 @@
   "name": "digitalwill",
   "version": "1.0.0",
   "description": "* Time-locked escrow contract (Beneficiary, Donor)\r * Will as a Non-fungible token (PDF/JPG metadata)\r * Decentralized Storage (Gaiahub/IPFS)\r * Custom Fungible token as a currency\r * Asymmetric encryption for securing metadata",
-  "main": "test.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ummarikram/DigitalWill.git"

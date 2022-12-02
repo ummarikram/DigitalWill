@@ -46,7 +46,7 @@ Clarinet.test({
         ]);
 
         futureBlock.receipts[0].result.expectOk()
-        .expectBool(false)
+        .expectBool(true)
 
         futureBlock.receipts[0].events.expectSTXTransferEvent(
             amount,
