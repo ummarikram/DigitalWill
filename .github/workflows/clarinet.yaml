@@ -1,6 +1,5 @@
 name: CI
 on: [push,pull_request]
-
 jobs:
   job1:
     name: "Test contracts with Clarinet"
@@ -8,8 +7,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: "Execute test suite"
-      - uses: actions/setup-node@v3
-      - uses: docker://hirosystems/clarinet:latest
+        uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-        run: -c "npm ci && cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
