@@ -1,7 +1,7 @@
 name: CI
 on: [push,pull_request]
 jobs:
-  tests:
+  job1:
     name: "Test contracts with Clarinet"
     runs-on: ubuntu-latest
     steps:
@@ -11,7 +11,8 @@ jobs:
         with:
           entrypoint: "bash"
           args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"
-  check_logs:
+  job2:
+    needs: job1
     name: "Check Logs for Errors"
     runs-on: ubuntu-latest
     steps:
