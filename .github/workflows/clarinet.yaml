@@ -4,15 +4,19 @@ jobs:
   job1:
     name: "Test contracts with Clarinet"
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
     steps:
+      - id: step1
       - uses: actions/checkout@v3
       - name: "Execute test suite"
         uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test >> log.txt"
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      - run: npm ci
-      - run: "cd digital-will/libs/stacks/contracts/digitalWill && node test"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test" >> $GITHUB_OUTPUT
+  job2:
+    name: "Checking Logs"
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo ${{needs.job1.outputs.output1}}
