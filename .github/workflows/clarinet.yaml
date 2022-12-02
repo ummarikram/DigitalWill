@@ -6,14 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: "Execute test suite"
         id: "test-suite"
         uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
           args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test"
   job2:
-    name: "Checking Logs"
     runs-on: ubuntu-latest
     needs: job1
     steps:
