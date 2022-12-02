@@ -18,7 +18,7 @@ jobs:
           path: ./digital-will/libs/stacks/contracts/digitalWill/log.txt
       - name: Echo log.txt
         run: echo "${{ steps.log.outputs.content }}"
-      - name: Test Logs
+      - name: Check Errors
         if: contains(${{ steps.log.outputs.content }}, 'FAILED')
-        run: echo fred
+        run: exit 1
   
