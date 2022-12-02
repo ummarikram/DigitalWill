@@ -2,18 +2,21 @@ name: CI
 on: [push,pull_request]
 jobs:
   job1:
-    name: "Checking Logs"
+    name: "Test contracts with Clarinet"
     runs-on: ubuntu-latest
+    outputs:
+      logs: ${{ steps.step1.outputs.*}}
     steps:
       - uses: actions/checkout@v3
-      - name: "Execute test suite"
+      - id: step1
+        name: "Execute test suite"
         uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test >> log.txt" 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      - run: npm ci
-      - run: "node test"
+          args: "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test" 
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo ${{needs.job1.outputs.logs}}
   
