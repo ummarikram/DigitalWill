@@ -10,7 +10,7 @@ jobs:
         uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test"
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
