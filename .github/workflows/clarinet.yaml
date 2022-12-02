@@ -5,8 +5,8 @@ jobs:
     name: "Test contracts with Clarinet"
     runs-on: ubuntu-latest
     steps:
-        uses: actions/checkout@v3
       - name: "Execute test suite"
+        uses: actions/checkout@v3
         uses: docker://hirosystems/clarinet:latest
         id: test-log
         with:
