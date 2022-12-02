@@ -8,11 +8,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: "Execute test suite"
       - uses: actions/setup-node@v3
-        run: npm ci
       - uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
+          args: -c "npm ci && cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
   test:
     needs: job1
     name: "Check Logs for Errors"
