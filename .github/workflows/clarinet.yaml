@@ -10,7 +10,7 @@ jobs:
         uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"  
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"  
   job2:
     name: "Checking Logs"
     needs: job1
