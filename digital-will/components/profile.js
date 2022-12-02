@@ -1,8 +1,9 @@
 import { toast } from 'react-toastify';
 import { imageValidation, resizeImage } from "../services/image";
 import { saveUserPic } from '../libs/stacks/gaiahub/storage';
+import { APIEndPoint } from '../libs/stacks/auth/auth';
 
-export default function ProfileCard({ address, tokens, profilePic, updateProfilePic }) {
+export default function ProfileCard({ address, tokens, wills, profilePic, updateProfilePic }) {
 
   const onFileChange = async (event) => {
 
@@ -52,7 +53,7 @@ export default function ProfileCard({ address, tokens, profilePic, updateProfile
   const requestTokens = (e) => {
 
     if (address) {
-      fetch('https://stacks-node-api.testnet.stacks.co/extended/v1/faucets/stx', {
+      fetch(`${APIEndPoint}/extended/v1/faucets/stx`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
@@ -101,17 +102,13 @@ export default function ProfileCard({ address, tokens, profilePic, updateProfile
       {/* Stats */}
       <div className="flex flex-wrap mt-10 p-5 text-center text-[#6e6e6e] bg-white m-5 justify-around rounded-md">
         <div className="p-4">
-          <h1 className="text-3xl">Coins</h1>
-          <h2 className="text-2xl">10</h2>
-        </div>
-        <div className="p-4">
-          <h1 className="text-3xl">Tokens</h1>
-          <h2 className="text-2xl">{tokens ? tokens : "..."}</h2>
+          <h1 className="text-2xl sm:text-2xl md:text-3xl">STX Tokens</h1>
+          <h2 className="text-base sm:text-lg md:text-xl">{tokens ? tokens : "..."}</h2>
         </div>
 
         <div className="p-4">
-          <h1 className="text-3xl">Wills</h1>
-          <h2 className="text-2xl">10</h2>
+          <h1 className="text-2xl sm:text-2xl md:text-3xl">Wills</h1>
+          <h2 className="text-base sm:text-lg md:text-xl">{wills}</h2>
         </div>
       </div>
 

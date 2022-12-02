@@ -9,16 +9,16 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: will-prod
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 33360
-            path: "contracts\\will-prod.clar"
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
             contract-name: will
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 35290
             path: "contracts\\will.clar"
+            anchor-block-only: true
+            clarity-version: 1
+        - contract-publish:
+            contract-name: will-prod
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 33360
+            path: "contracts\\will-prod.clar"
             anchor-block-only: true
             clarity-version: 1

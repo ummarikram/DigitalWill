@@ -82,7 +82,7 @@ export async function Mint(will) {
     appCallPublicFunction(options);
 }
 
-export async function Claim(id, amount) {
+export async function Claim(id, amount, donor) {
 
     // Fungible Token Post Conditions
     const STXpostConditionCode = FungibleConditionCode.GreaterEqual;
@@ -90,7 +90,7 @@ export async function Claim(id, amount) {
 
     const postConditions = [
         makeContractSTXPostCondition(
-            myStxAddress(),
+            donor,
             contractName,
             STXpostConditionCode,
             STXpostConditionAmount

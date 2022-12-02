@@ -3,7 +3,7 @@ import { Claim } from '../libs/stacks/contracts/integration';
 export default function WillCard({ id, donor, amount, unlock ,img, claimed }) {
 
     const claimWill = () => {
-        Claim(id, amount);
+        Claim(id, amount, donor);
     }
 
     return (

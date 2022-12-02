@@ -5,6 +5,7 @@ import ProfileCard from '../components/profile';
 import useSWR from 'swr';
 import { fetchUserPic } from '../libs/stacks/gaiahub/storage';
 import { APIEndPoint } from '../libs/stacks/auth/auth';
+import { contractDeployerAddress, contractName, assetName } from '../libs/stacks/contracts/integration';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
@@ -12,14 +13,17 @@ export default function Profile({ address }) {
 
   const [profilePic, setProfilePic] = useState({ selectedFile: null });
   const [token, setTokens] = useState(0);
-  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/address/${address}/stx` : null, fetcher, { refreshInterval: 2000 });
+  const [will, setWills] = useState(0);
+  const { data, error } = useSWR(address ? `${APIEndPoint}/extended/v1/address/${address}/balances` : null, fetcher, { refreshInterval: 2000 });
 
   useEffect(() => {
 
     if (data) {
       
-      setTokens(data.balance == 0? "0": data.balance / 1000000);
+      setTokens(data.stx.balance == 0? "0": data.stx.balance / 1000000);
 
+      const gotAnyWills = data.non_fungible_tokens[`${contractDeployerAddress}.${contractName}::${assetName}`]
+      setWills(gotAnyWills? gotAnyWills.count : "0")
     }
 
   }, [data]);
@@ -61,7 +65,7 @@ export default function Profile({ address }) {
 
       {address &&
         <main className={styles.main}>
-          <ProfileCard address={address} tokens={token} profilePic={profilePic} updateProfilePic={setProfilePic} />
+          <ProfileCard address={address} tokens={token} wills={will} profilePic={profilePic} updateProfilePic={setProfilePic} />
         </main>
       }
     </div>
