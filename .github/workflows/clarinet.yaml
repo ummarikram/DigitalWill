@@ -12,4 +12,4 @@ jobs:
       - uses: docker://hirosystems/clarinet:latest
         with:
           entrypoint: "bash"
-          args: -c "npm ci && cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
+        run: -c "npm ci && cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
