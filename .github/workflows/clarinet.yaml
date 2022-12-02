@@ -1,6 +1,6 @@
 name: CI
 on: [push,pull_request]
-jobs:
+jobs: 
   test:
     name: "Test contracts with Clarinet"
     runs-on: ubuntu-latest
@@ -10,5 +10,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
+      - uses: docker://hirosystems/clarinet:latest
+        with:
+          entrypoint: "bash"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"
       - run: npm ci
       - run: "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt && node test"
