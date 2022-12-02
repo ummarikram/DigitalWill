@@ -6,7 +6,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: "Execute unit tests"
+      - name: "Execute test suite"
         uses: docker://hirosystems/clarinet:latest
         with:
-          args: test --coverage --manifest-path=./digital-will/libs/stacks/contracts/digitalWill/Clarinet.toml
+          entrypoint: "bash"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test > log.txt"
+  tests:
+    name: "Check Logs for Errors"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: npm test
