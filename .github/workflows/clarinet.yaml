@@ -19,6 +19,6 @@ jobs:
       - name: Echo log.txt
         run: echo "${{ steps.log.outputs.content }}"
       - name: Check Errors
-        if: contains(${{ steps.log.outputs.content }}, 'FAILED')
+        if: contains(${{ steps.log.outputs.content }}, 'ERRORS')
         run: exit 1
   
