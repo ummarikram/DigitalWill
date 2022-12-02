@@ -15,7 +15,7 @@ jobs:
         id: log
         uses: juliangruber/read-file-action@v1
         with:
-          path: /digital-will/libs/stacks/contracts/digitalWill/log.txt
+          path: ./digital-will/libs/stacks/contracts/digitalWill/log.txt
       - name: Echo log.txt
         run: echo "${{ steps.log.outputs.content }}"
   
