@@ -16,3 +16,19 @@ jobs:
           node-version: '16'
       - run: npm ci
       - run: "cd digital-will/libs/stacks/contracts/digitalWill && node test"
+  job2:
+    name: "Checking Logs"
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Execute test suite"
+        uses: docker://hirosystems/clarinet:latest
+        with:
+          entrypoint: "bash"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: "cd digital-will/libs/stacks/contracts/digitalWill && node test"
