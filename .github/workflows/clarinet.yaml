@@ -11,6 +11,7 @@ jobs:
         id: "test-suite"
         with:
           entrypoint: "bash"
-          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test"
+          args: -c "cd digital-will/libs/stacks/contracts/digitalWill && clarinet test" |
       - name: "Check Logs for Errors"
+        id: "logs"
         run: ${{ steps.test-suite.outputs.stdout }}
