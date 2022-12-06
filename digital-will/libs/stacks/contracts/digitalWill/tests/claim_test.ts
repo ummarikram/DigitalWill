@@ -26,7 +26,7 @@ Clarinet.test({
         assertEquals(block.height, advanceBlockHeight + 1);
         
         block.receipts[0].result.expectOk()
-        .expectUint(0)
+        .expectUint(1)
 
         // (Identifier, Owner/Reciever, Contract Address, Asset Name)
         block.receipts[0].events.expectNonFungibleTokenMintEvent(types.uint(1), beneficiary.address, 
